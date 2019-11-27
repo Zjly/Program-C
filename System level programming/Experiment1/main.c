@@ -2,7 +2,7 @@
  * CS:APP Data Lab 
  * 
  * <张雷 2017302580196>
- * 
+ *
  * bits.c - Source file with your solutions to the Lab.
  *          This is the file you will hand in to your instructor.
  *
@@ -10,7 +10,7 @@
  * compiler. You can still use printf for debugging without including
  * <stdio.h>, although you might get a compiler warning. In general,
  * it's not good practice to ignore compiler warnings, but in this
- * case it's OK.  
+ * case it's OK.
  */
 
 #if 0
@@ -24,11 +24,11 @@ You will provide your solution to the Data Lab by
 editing the collection of functions in this source file.
 
 INTEGER CODING RULES:
- 
+
   Replace the "return" statement in each function with one
-  or more lines of C code that implements the function. Your code 
+  or more lines of C code that implements the function. Your code
   must conform to the following style:
- 
+
   int Funct(arg1, arg2, ...) {
       /* brief description of how your implementation works */
       int var1 = Expr1;
@@ -47,7 +47,7 @@ INTEGER CODING RULES:
   2. Function arguments and local variables (no global variables).
   3. Unary integer operations ! ~
   4. Binary integer operations & ^ | + << >>
-    
+
   Some of the problems restrict the set of allowed operators even further.
   Each "Expr" may consist of multiple operators. You are not restricted to
   one operator per line.
@@ -62,7 +62,7 @@ INTEGER CODING RULES:
   7. Use any data type other than int.  This implies that you
      cannot use arrays, structs, or unions.
 
- 
+
   You may assume that your machine:
   1. Uses 2s complement, 32-bit representations of integers.
   2. Performs right shifts arithmetically.
@@ -106,26 +106,26 @@ You are expressly forbidden to:
 
 
 NOTES:
-  1. Use the dlc (data lab checker) compiler (described in the handout) to 
+  1. Use the dlc (data lab checker) compiler (described in the handout) to
      check the legality of your solutions.
   2. Each function has a maximum number of operators (! ~ & ^ | + << >>)
-     that you are allowed to use for your implementation of the function. 
-     The max operator count is checked by dlc. Note that '=' is not 
+     that you are allowed to use for your implementation of the function.
+     The max operator count is checked by dlc. Note that '=' is not
      counted; you may use as many of these as you want without penalty.
   3. Use the btest test harness to check your functions for correctness.
   4. Use the BDD checker to formally verify your functions
   5. The maximum number of ops for each function is given in the
-     header comment for each function. If there are any inconsistencies 
+     header comment for each function. If there are any inconsistencies
      between the maximum ops in the writeup and in this file, consider
      this file the authoritative source.
 
 /*
  * STEP 2: Modify the following functions according the coding rules.
- * 
+ *
  *   IMPORTANT. TO AVOID GRADING SURPRISES:
  *   1. Use the dlc compiler to check that your solutions conform
  *      to the coding rules.
- *   2. Use the BDD checker to formally verify that your solutions produce 
+ *   2. Use the BDD checker to formally verify that your solutions produce
  *      the correct answers.
  */
 
@@ -166,8 +166,8 @@ NOTES:
    - 56 emoji characters
    - 285 hentaigana
    - 3 additional Zanabazar Square characters */
-/* 
- * bitAnd - x&y using only ~ and | 
+/*
+ * bitAnd - x&y using only ~ and |
  *   Example: bitAnd(6, 5) = 4
  *   Legal ops: ~ |
  *   Max ops: 8
@@ -207,7 +207,7 @@ int getByte(int x, int n) {
  *   Examples: logicalShift(0x87654321,4) = 0x08765432
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 20
- *   Rating: 3 
+ *   Rating: 3
  */
 int logicalShift(int x, int n) {
     /* 取出符号位 */
@@ -242,13 +242,16 @@ int bitCount(int x) {
     /* https://blog.csdn.net/peiyao456/article/details/51724099 */
 
     /* 得到0x5555555 */
-    int num1 = 0x55 + (0x55 << 8) + (0x55 << 16) + (0x55 << 24);
+    int tool1 = 0x55 + (0x55 << 16);
+    int num1 = tool1 + (tool1 << 8);
 
     /* 得到0x3333333 */
-    int num2 = 0x33 + (0x33 << 8) + (0x33 << 16) + (0x33 << 24);
+    int tool2 = 0x33 + (0x33 << 16);
+    int num2 = tool2 + (tool2 << 8);
 
     /* 得到0x0f0f0f0f */
-    int num3 = 0x0f + (0x0f << 8) + (0x0f << 16) + (0x0f << 24);
+    int tool3 = 0x0f + (0x0f << 16);
+    int num3 = tool3 + (tool3 << 8);
 
     /* 得到0x00ff00ff */
     int num4 = 0xff + (0xff << 16);
@@ -271,7 +274,7 @@ int bitCount(int x) {
  *   Examples: bang(3) = 0, bang(0) = 1
  *   Legal ops: ~ & ^ | + << >>
  *   Max ops: 12
- *   Rating: 4 
+ *   Rating: 4
  */
 int bang(int x) {
     /* 取-x，仅有0与-MAX的负值与自身相等 */
@@ -287,7 +290,7 @@ int bang(int x) {
 }
 
 /*
- * tmin - return minimum two's complement integer 
+ * tmin - return minimum two's complement integer
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 4
  *   Rating: 1
@@ -298,7 +301,7 @@ int tmin(void) {
 }
 
 /*
- * fitsBits - return 1 if x can be represented as an 
+ * fitsBits - return 1 if x can be represented as an
  *  n-bit, two's complement integer.
  *   1 <= n <= 32
  *   Examples: fitsBits(5,3) = 0, fitsBits(-4,3) = 1
@@ -308,12 +311,13 @@ int tmin(void) {
  */
 int fitsBits(int x, int n) {
     int signBit = (x >> 31) & 1;
+    int shift = n + ~1 + 1;
 
     /* 若x为正数，取x从后数的第n位数(新数符号位)，若与原始符号位相等且该数前无1则可被完全表示 */
-    int result1 = !(signBit ^ (x >> (n - 1)));
+    int result1 = !(signBit ^ (x >> shift));
 
     /* 若x为负数，取x从后数的第n位数(新数符号位)，若与原始符号位相等且该数前全是1则可被完全表示 */
-    int result2 = !~(~!signBit & (x >> (n - 1)));
+    int result2 = !~(~!signBit & (x >> shift));
 
     int result = result1 + result2;
     return result;
@@ -344,7 +348,7 @@ int divpwr2(int x, int n) {
 }
 
 /*
- * negate - return -x 
+ * negate - return -x
  *   Example: negate(1) = -1.
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 5
@@ -356,7 +360,7 @@ int negate(int x) {
 }
 
 /*
- * isPositive - return 1 if x > 0, return 0 otherwise 
+ * isPositive - return 1 if x > 0, return 0 otherwise
  *   Example: isPositive(-1) = 0.
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 8
@@ -371,7 +375,7 @@ int isPositive(int x) {
 }
 
 /*
- * isLessOrEqual - if x <= y  then return 1, else return 0 
+ * isLessOrEqual - if x <= y  then return 1, else return 0
  *   Example: isLessOrEqual(4,5) = 1.
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 24
@@ -408,7 +412,30 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4
  */
 int ilog2(int x) {
-    return 2;
+    /* https://blog.csdn.net/u014124795/article/details/38471797?locationNum=11&fps=1 */
+    int shift1, shift2, shift3, shift4, shift5;
+
+    // The value of 2^n has the form:0……010……0,so we can cut it short and increment the count variable with the corresponding number.
+    int sign = !!(x >> 16); // X的左16位是否全不为0
+    shift1 = sign << 4; // 从16开始计数
+    x = x >> shift1; // 将x设为前16位进行之后的计算
+
+    sign = !!(x >> 8); // X的左8位是否全不为0
+    shift2 = sign << 3; // 从8开始计数
+    x = x >> shift2; // 将x设为前8位进行之后的计算
+
+    sign = !!(x >> 4); // X的左4位是否全不为0
+    shift3 = sign << 2; // 从4开始计数
+    x = x >> shift3; // 将x设为前4位进行之后的计算
+
+    sign = !!(x >> 2); // X的左2位是否全不为0
+    shift4 = sign << 1; // 从2开始计数
+    x = x >> shift4; // 将x设为前2位进行之后的计算
+
+    sign = !!(x >> 1); // X的左1位是否全不为0
+    shift5 = sign; // 从1开始计数
+
+    return shift1 + shift2 + shift3 + shift4 + shift5;
 }
 
 /*
@@ -423,7 +450,11 @@ int ilog2(int x) {
  *   Rating: 2
  */
 unsigned float_neg(unsigned uf) {
-    return 2;
+    /* NAN返回参数 */
+    if((uf & 0x7fffffff) > 0x7f800000) {
+        return uf;
+    }
+    return uf ^ 0x80000000;
 }
 
 /*
@@ -436,7 +467,78 @@ unsigned float_neg(unsigned uf) {
  *   Rating: 4
  */
 unsigned float_i2f(int x) {
-    return 2;
+    int signBit, tSignBit, mantissaShift, num, temp, superfluous, roundedPart, roundedPart1, roundedPart1plus1;
+
+    /* 计算符号位 */
+    signBit = x & 0x80000000;
+
+    /* 考虑-MAX */
+    if(x < -2147483647) {
+        return -822083584;
+    }
+
+    /* 考虑0 */
+    if(x == 0) {
+        return 0;
+    }
+
+    /* 负数转化为正数 */
+    if(x < 0) {
+        x = -x;
+    }
+
+    /* 计算尾数位 */
+    tSignBit = 0;
+    /* 将尾数为移动至最前 */
+    mantissaShift = x;
+    while(!tSignBit) {
+        mantissaShift = mantissaShift << 1;
+        tSignBit = (mantissaShift >> 31) & 1;
+    }
+    mantissaShift = mantissaShift << 1;
+
+    /* 计算指数位 */
+    num = -1;
+    temp = x;
+    while(!!temp) {
+        temp = temp >> 1;
+        num = num + 1;
+    }
+
+    num = 127 + num;
+    num = num << 23;
+
+    /* 计算舍入 */
+    superfluous = mantissaShift & 0x1ff;
+    /* 舍入部分 */
+    roundedPart = mantissaShift >> 9;
+    /* 得到舍入部分的值 */
+    roundedPart1 = roundedPart & 0x007fffff;
+    /* 舍入的结果 */
+    roundedPart1plus1 = roundedPart1 + 1;
+
+    /* 舍 */
+    if(superfluous < 0x100) {
+        mantissaShift = roundedPart1;
+    }
+    /* 入 */
+    else if(superfluous > 0x100) {
+        mantissaShift = roundedPart1plus1;
+    }
+    /* 分情况考虑 */
+    else {
+        int sign = roundedPart & 1;
+        /* 根据前一个数考虑是舍还是入 */
+        if(sign == 1) {
+            mantissaShift = roundedPart1plus1;
+        } else {
+            mantissaShift = roundedPart1;
+        }
+    }
+
+    mantissaShift = mantissaShift + num + signBit;
+
+    return mantissaShift;
 }
 
 /*
@@ -451,5 +553,24 @@ unsigned float_i2f(int x) {
  *   Rating: 4
  */
 unsigned float_twice(unsigned uf) {
-    return 2;
+    int signBit, indexBit;
+
+    /* 计算符号位 */
+    signBit = uf & 0x80000000;
+
+    /* 计算指数位 */
+    indexBit = uf & 0x7f800000;
+
+    /* NAN */
+    if(indexBit == 0x7f800000) {
+        return uf;
+    }
+
+    /* 指数为0，尾数*2 */
+    if(indexBit == 0) {
+        return (uf << 1) | signBit;
+    }
+
+    /* 指数位+1 */
+    return uf + 0x00800000;
 }
