@@ -442,8 +442,8 @@ Disassembly of section .text:
     1620:	d1 fb                	sar    %ebx
     1622:	01 f3                	add    %esi,%ebx
     1624:	39 fb                	cmp    %edi,%ebx
-    1626:	7f 06                	jg     162e <func4+0x1a>
-    1628:	7c 10                	jl     163a <func4+0x26>
+    1626:	7f 06                	jg     162e <func4+0x1a> # 大于即跳转
+    1628:	7c 10                	jl     163a <func4+0x26> # 小于即跳转
     162a:	89 d8                	mov    %ebx,%eax
     162c:	5b                   	pop    %rbx
     162d:	c3                   	retq   
@@ -468,16 +468,16 @@ Disassembly of section .text:
     1669:	e8 b2 fa ff ff       	callq  1120 <__isoc99_sscanf@plt>
     166e:	83 f8 02             	cmp    $0x2,%eax
     1671:	75 06                	jne    1679 <phase_4+0x33>
-    1673:	83 3c 24 0e          	cmpl   $0xe,(%rsp)
+    1673:	83 3c 24 0e          	cmpl   $0xe,(%rsp) # 第一个数 <= 14 通过
     1677:	76 05                	jbe    167e <phase_4+0x38>
     1679:	e8 52 04 00 00       	callq  1ad0 <explode_bomb>
     167e:	ba 0e 00 00 00       	mov    $0xe,%edx
     1683:	be 00 00 00 00       	mov    $0x0,%esi
     1688:	8b 3c 24             	mov    (%rsp),%edi
     168b:	e8 84 ff ff ff       	callq  1614 <func4>
-    1690:	83 f8 0d             	cmp    $0xd,%eax
+    1690:	83 f8 0d             	cmp    $0xd,%eax # 返回值 = 13则通过
     1693:	75 07                	jne    169c <phase_4+0x56>
-    1695:	83 7c 24 04 0d       	cmpl   $0xd,0x4(%rsp)
+    1695:	83 7c 24 04 0d       	cmpl   $0xd,0x4(%rsp) # 第二个数等于13则通过
     169a:	74 05                	je     16a1 <phase_4+0x5b>
     169c:	e8 2f 04 00 00       	callq  1ad0 <explode_bomb>
     16a1:	48 8b 44 24 08       	mov    0x8(%rsp),%rax
@@ -939,7 +939,7 @@ Disassembly of section .text:
     1ccf:	83 f8 03             	cmp    $0x3,%eax
     1cd2:	74 0e                	je     1ce2 <phase_defused+0x67>
     1cd4:	48 8d 3d ad 15 00 00 	lea    0x15ad(%rip),%rdi        # 3288 <array.3514+0xa8>
-    1cdb:	e8 80 f3 ff ff       	callq  1060 <puts@plt>
+    1cdb:	e8 80 f3 ff ff       	callq  1060 <puts@plt> # 隐藏？
     1ce0:	eb b6                	jmp    1c98 <phase_defused+0x1d>
     1ce2:	48 8d 7c 24 10       	lea    0x10(%rsp),%rdi
     1ce7:	48 8d 35 64 16 00 00 	lea    0x1664(%rip),%rsi        # 3352 <array.3514+0x172>
