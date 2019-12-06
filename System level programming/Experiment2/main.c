@@ -26,6 +26,7 @@ int func4(int edx, int esi, int edi) {
     }
 }
 
+
 int main() {
     for(int i = 0; i <= 14; i++) {
         printf("%d\t", func4(14, 0, i));

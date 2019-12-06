@@ -496,21 +496,21 @@ Disassembly of section .text:
     16ca:	00 00 
     16cc:	48 89 44 24 08       	mov    %rax,0x8(%rsp)
     16d1:	31 c0                	xor    %eax,%eax
-    16d3:	e8 cf 02 00 00       	callq  19a7 <string_length>
-    16d8:	83 f8 06             	cmp    $0x6,%eax
+    16d3:	e8 cf 02 00 00       	callq  19a7 <string_length> # rax中字符串长度
+    16d8:	83 f8 06             	cmp    $0x6,%eax # 长度要等于6
     16db:	75 55                	jne    1732 <phase_5+0x77>
     16dd:	b8 00 00 00 00       	mov    $0x0,%eax
-    16e2:	48 8d 0d f7 1a 00 00 	lea    0x1af7(%rip),%rcx        # 31e0 <array.3514>
-    16e9:	0f b6 14 03          	movzbl (%rbx,%rax,1),%edx
-    16ed:	83 e2 0f             	and    $0xf,%edx
-    16f0:	0f b6 14 11          	movzbl (%rcx,%rdx,1),%edx
+    16e2:	48 8d 0d f7 1a 00 00 	lea    0x1af7(%rip),%rcx # maduiersnfotvbylSo you think you can stop the bomb with ctrl-c, do you?        # 31e0 <array.3514>
+    16e9:	0f b6 14 03          	movzbl (%rbx,%rax,1),%edx # rbx存放输入，将rbx中第一个字符放到edx中
+    16ed:	83 e2 0f             	and    $0xf,%edx # 取后四位
+    16f0:	0f b6 14 11          	movzbl (%rcx,%rdx,1),%edx # 取rcx中的第rdx位字符置入edx中
     16f4:	88 54 04 01          	mov    %dl,0x1(%rsp,%rax,1)
     16f8:	48 83 c0 01          	add    $0x1,%rax
-    16fc:	48 83 f8 06          	cmp    $0x6,%rax
+    16fc:	48 83 f8 06          	cmp    $0x6,%rax # 循环六次
     1700:	75 e7                	jne    16e9 <phase_5+0x2e>
     1702:	c6 44 24 07 00       	movb   $0x0,0x7(%rsp)
-    1707:	48 8d 7c 24 01       	lea    0x1(%rsp),%rdi
-    170c:	48 8d 35 a4 1a 00 00 	lea    0x1aa4(%rip),%rsi        # 31b7 <_IO_stdin_used+0x1b7>
+    1707:	48 8d 7c 24 01       	lea    0x1(%rsp),%rdi # 结果
+    170c:	48 8d 35 a4 1a 00 00 	lea    0x1aa4(%rip),%rsi  # rsi = oilers       # 31b7 <_IO_stdin_used+0x1b7>
     1713:	e8 ac 02 00 00       	callq  19c4 <strings_not_equal>
     1718:	85 c0                	test   %eax,%eax
     171a:	75 1d                	jne    1739 <phase_5+0x7e>
@@ -532,7 +532,7 @@ Disassembly of section .text:
     1747:	41 56                	push   %r14
     1749:	41 55                	push   %r13
     174b:	41 54                	push   %r12
-    174d:	55                   	push   %rbp
+    174d:	55                   	push   %rbp # 存放输入的六个数
     174e:	53                   	push   %rbx
     174f:	48 83 ec 68          	sub    $0x68,%rsp
     1753:	64 48 8b 04 25 28 00 	mov    %fs:0x28,%rax
@@ -544,54 +544,54 @@ Disassembly of section .text:
     1769:	e8 88 03 00 00       	callq  1af6 <read_six_numbers>
     176e:	4d 89 f4             	mov    %r14,%r12
     1771:	41 bf 01 00 00 00    	mov    $0x1,%r15d
-    1777:	49 89 e5             	mov    %rsp,%r13
+    1777:	49 89 e5             	mov    %rsp,%r13 # 里面是6
     177a:	eb 29                	jmp    17a5 <phase_6+0x60>
     177c:	e8 4f 03 00 00       	callq  1ad0 <explode_bomb>
     1781:	eb 30                	jmp    17b3 <phase_6+0x6e>
     1783:	48 83 c3 01          	add    $0x1,%rbx
     1787:	83 fb 05             	cmp    $0x5,%ebx
-    178a:	7f 11                	jg     179d <phase_6+0x58>
-    178c:	41 8b 44 9d 00       	mov    0x0(%r13,%rbx,4),%eax
+    178a:	7f 11                	jg     179d <phase_6+0x58> # 大于即跳转
+    178c:	41 8b 44 9d 00       	mov    0x0(%r13,%rbx,4),%eax # 不断取下一个数
     1791:	39 45 00             	cmp    %eax,0x0(%rbp)
-    1794:	75 ed                	jne    1783 <phase_6+0x3e>
+    1794:	75 ed                	jne    1783 <phase_6+0x3e> # 下一个数不能与当前数相等，多次循环也就是彼此不能相等
     1796:	e8 35 03 00 00       	callq  1ad0 <explode_bomb>
     179b:	eb e6                	jmp    1783 <phase_6+0x3e>
     179d:	49 83 c7 01          	add    $0x1,%r15
     17a1:	49 83 c6 04          	add    $0x4,%r14
-    17a5:	4c 89 f5             	mov    %r14,%rbp
+    17a5:	4c 89 f5             	mov    %r14,%rbp # 177a的入口
     17a8:	41 8b 06             	mov    (%r14),%eax
     17ab:	83 e8 01             	sub    $0x1,%eax
     17ae:	83 f8 05             	cmp    $0x5,%eax
-    17b1:	77 c9                	ja     177c <phase_6+0x37>
-    17b3:	49 83 ff 06          	cmp    $0x6,%r15
-    17b7:	74 05                	je     17be <phase_6+0x79>
+    17b1:	77 c9                	ja     177c <phase_6+0x37> # eax - 1 <= 5 即输入数要小于6
+    17b3:	49 83 ff 06          	cmp    $0x6,%r15 # 计数器
+    17b7:	74 05                	je     17be <phase_6+0x79> # 等于即跳转，需循环6次
     17b9:	4c 89 fb             	mov    %r15,%rbx
     17bc:	eb ce                	jmp    178c <phase_6+0x47>
-    17be:	49 8d 7c 24 18       	lea    0x18(%r12),%rdi
+    17be:	49 8d 7c 24 18       	lea    0x18(%r12),%rdi # 跳转点，新的一段代码
     17c3:	4c 89 e0             	mov    %r12,%rax
     17c6:	b9 07 00 00 00       	mov    $0x7,%ecx
     17cb:	89 ca                	mov    %ecx,%edx
-    17cd:	2b 10                	sub    (%rax),%edx
+    17cd:	2b 10                	sub    (%rax),%edx # 7 - 当前数
     17cf:	89 10                	mov    %edx,(%rax)
     17d1:	48 83 c0 04          	add    $0x4,%rax
-    17d5:	48 39 f8             	cmp    %rdi,%rax
-    17d8:	75 f1                	jne    17cb <phase_6+0x86>
+    17d5:	48 39 f8             	cmp    %rdi,%rax # 比较是否到结尾
+    17d8:	75 f1                	jne    17cb <phase_6+0x86> # 不等即循环
     17da:	48 8d 74 24 20       	lea    0x20(%rsp),%rsi
     17df:	41 8b 0c 24          	mov    (%r12),%ecx
     17e3:	b8 01 00 00 00       	mov    $0x1,%eax
     17e8:	48 8d 15 21 3a 00 00 	lea    0x3a21(%rip),%rdx        # 5210 <node1>
     17ef:	83 f9 01             	cmp    $0x1,%ecx
-    17f2:	7e 0b                	jle    17ff <phase_6+0xba>
+    17f2:	7e 0b                	jle    17ff <phase_6+0xba> # 小于等于即跳转
     17f4:	48 8b 52 08          	mov    0x8(%rdx),%rdx
     17f8:	83 c0 01             	add    $0x1,%eax
     17fb:	39 c8                	cmp    %ecx,%eax
-    17fd:	75 f5                	jne    17f4 <phase_6+0xaf>
+    17fd:	75 f5                	jne    17f4 <phase_6+0xaf> # 不等即循环
     17ff:	48 89 16             	mov    %rdx,(%rsi)
     1802:	49 83 c4 04          	add    $0x4,%r12
     1806:	48 83 c6 08          	add    $0x8,%rsi
     180a:	4c 39 e7             	cmp    %r12,%rdi
-    180d:	75 d0                	jne    17df <phase_6+0x9a>
-    180f:	48 8b 5c 24 20       	mov    0x20(%rsp),%rbx
+    180d:	75 d0                	jne    17df <phase_6+0x9a> # 不等即循环，串成一个链表
+    180f:	48 8b 5c 24 20       	mov    0x20(%rsp),%rbx # 入口
     1814:	48 8b 44 24 28       	mov    0x28(%rsp),%rax
     1819:	48 89 43 08          	mov    %rax,0x8(%rbx)
     181d:	48 8b 54 24 30       	mov    0x30(%rsp),%rdx
@@ -605,14 +605,14 @@ Disassembly of section .text:
     1841:	48 c7 40 08 00 00 00 	movq   $0x0,0x8(%rax)
     1848:	00 
     1849:	bd 05 00 00 00       	mov    $0x5,%ebp
-    184e:	eb 09                	jmp    1859 <phase_6+0x114>
-    1850:	48 8b 5b 08          	mov    0x8(%rbx),%rbx
+    184e:	eb 09                	jmp    1859 <phase_6+0x114> # 按照输入顺序相连
+    1850:	48 8b 5b 08          	mov    0x8(%rbx),%rbx # 入口
     1854:	83 ed 01             	sub    $0x1,%ebp
-    1857:	74 11                	je     186a <phase_6+0x125>
+    1857:	74 11                	je     186a <phase_6+0x125> # 过
     1859:	48 8b 43 08          	mov    0x8(%rbx),%rax
     185d:	8b 00                	mov    (%rax),%eax
     185f:	39 03                	cmp    %eax,(%rbx)
-    1861:	7d ed                	jge    1850 <phase_6+0x10b>
+    1861:	7d ed                	jge    1850 <phase_6+0x10b> # 大于等于即跳转，也就是链表结果要递减
     1863:	e8 68 02 00 00       	callq  1ad0 <explode_bomb>
     1868:	eb e6                	jmp    1850 <phase_6+0x10b>
     186a:	48 8b 44 24 58       	mov    0x58(%rsp),%rax
@@ -631,22 +631,22 @@ Disassembly of section .text:
 
 000000000000188e <fun7>:
     188e:	48 85 ff             	test   %rdi,%rdi
-    1891:	74 32                	je     18c5 <fun7+0x37>
+    1891:	74 32                	je     18c5 <fun7+0x37> # 失败
     1893:	48 83 ec 08          	sub    $0x8,%rsp
     1897:	8b 17                	mov    (%rdi),%edx
-    1899:	39 f2                	cmp    %esi,%edx
-    189b:	7f 0c                	jg     18a9 <fun7+0x1b>
-    189d:	b8 00 00 00 00       	mov    $0x0,%eax
-    18a2:	75 12                	jne    18b6 <fun7+0x28>
+    1899:	39 f2                	cmp    %esi,%edx # esi为输入，$edx为0x24即36
+    189b:	7f 0c                	jg     18a9 <fun7+0x1b> # 输入小于36则跳转
+    189d:	b8 00 00 00 00       	mov    $0x0,%eax # 返回值置0
+    18a2:	75 12                	jne    18b6 <fun7+0x28> # 不等即跳转
     18a4:	48 83 c4 08          	add    $0x8,%rsp
     18a8:	c3                   	retq   
-    18a9:	48 8b 7f 08          	mov    0x8(%rdi),%rdi
+    18a9:	48 8b 7f 08          	mov    0x8(%rdi),%rdi # rdi+8
     18ad:	e8 dc ff ff ff       	callq  188e <fun7>
-    18b2:	01 c0                	add    %eax,%eax
+    18b2:	01 c0                	add    %eax,%eax # 两倍返回值
     18b4:	eb ee                	jmp    18a4 <fun7+0x16>
-    18b6:	48 8b 7f 10          	mov    0x10(%rdi),%rdi
+    18b6:	48 8b 7f 10          	mov    0x10(%rdi),%rdi # rdi += 16
     18ba:	e8 cf ff ff ff       	callq  188e <fun7>
-    18bf:	8d 44 00 01          	lea    0x1(%rax,%rax,1),%eax
+    18bf:	8d 44 00 01          	lea    0x1(%rax,%rax,1),%eax # eax = 2 * rax + 1
     18c3:	eb df                	jmp    18a4 <fun7+0x16>
     18c5:	b8 ff ff ff ff       	mov    $0xffffffff,%eax
     18ca:	c3                   	retq   
@@ -661,11 +661,11 @@ Disassembly of section .text:
     18e3:	48 89 c3             	mov    %rax,%rbx
     18e6:	8d 40 ff             	lea    -0x1(%rax),%eax
     18e9:	3d e8 03 00 00       	cmp    $0x3e8,%eax
-    18ee:	77 26                	ja     1916 <secret_phase+0x4b>
+    18ee:	77 26                	ja     1916 <secret_phase+0x4b> # 大于则跳转，所以eax要<=0x3e8
     18f0:	89 de                	mov    %ebx,%esi
     18f2:	48 8d 3d 37 38 00 00 	lea    0x3837(%rip),%rdi        # 5130 <n1>
     18f9:	e8 90 ff ff ff       	callq  188e <fun7>
-    18fe:	83 f8 02             	cmp    $0x2,%eax
+    18fe:	83 f8 02             	cmp    $0x2,%eax # 返回值要=2
     1901:	75 1a                	jne    191d <secret_phase+0x52>
     1903:	48 8d 3d 7e 18 00 00 	lea    0x187e(%rip),%rdi        # 3188 <_IO_stdin_used+0x188>
     190a:	e8 51 f7 ff ff       	callq  1060 <puts@plt>
@@ -939,11 +939,11 @@ Disassembly of section .text:
     1ccf:	83 f8 03             	cmp    $0x3,%eax
     1cd2:	74 0e                	je     1ce2 <phase_defused+0x67>
     1cd4:	48 8d 3d ad 15 00 00 	lea    0x15ad(%rip),%rdi        # 3288 <array.3514+0xa8>
-    1cdb:	e8 80 f3 ff ff       	callq  1060 <puts@plt> # 隐藏？
+    1cdb:	e8 80 f3 ff ff       	callq  1060 <puts@plt>
     1ce0:	eb b6                	jmp    1c98 <phase_defused+0x1d>
     1ce2:	48 8d 7c 24 10       	lea    0x10(%rsp),%rdi
     1ce7:	48 8d 35 64 16 00 00 	lea    0x1664(%rip),%rsi        # 3352 <array.3514+0x172>
-    1cee:	e8 d1 fc ff ff       	callq  19c4 <strings_not_equal>
+    1cee:	e8 d1 fc ff ff       	callq  19c4 <strings_not_equal> # 比较处，rsi中为隐藏值
     1cf3:	85 c0                	test   %eax,%eax
     1cf5:	75 dd                	jne    1cd4 <phase_defused+0x59>
     1cf7:	48 8d 3d 2a 15 00 00 	lea    0x152a(%rip),%rdi        # 3228 <array.3514+0x48>
@@ -951,7 +951,7 @@ Disassembly of section .text:
     1d03:	48 8d 3d 46 15 00 00 	lea    0x1546(%rip),%rdi        # 3250 <array.3514+0x70>
     1d0a:	e8 51 f3 ff ff       	callq  1060 <puts@plt>
     1d0f:	b8 00 00 00 00       	mov    $0x0,%eax
-    1d14:	e8 b2 fb ff ff       	callq  18cb <secret_phase>
+    1d14:	e8 b2 fb ff ff       	callq  18cb <secret_phase> # 调用点
     1d19:	eb b9                	jmp    1cd4 <phase_defused+0x59>
     1d1b:	e8 60 f3 ff ff       	callq  1080 <__stack_chk_fail@plt>
 
